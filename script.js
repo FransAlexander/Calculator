@@ -22,6 +22,7 @@ const numbers = document.querySelectorAll(".numPad")
 const displayTopFirst = document.querySelector(".display_numbers_top--first")
 const displayTopOperator = document.querySelector(".display_numbers_top--operator")
 const displayTopLast = document.querySelector(".display_numbers_top--last")
+const displayBottomResult = document.querySelector(".display_numbers_bottom--calcResult")
 
 let numberValue1 = []
 let numberValue2 = []
@@ -29,6 +30,7 @@ let displayNumBeforeOperator = "";
 let displayNumAfterOperator = "";
 let displayOperator = "";
 let numberPlacementOnDisplay = "beforeOperator"
+let SELECTED_OPERATOR = ""
 
 btnZero.addEventListener("click",displayNum1(btnZero))
 btnOne.addEventListener("click",displayNum1(btnOne))
@@ -60,9 +62,14 @@ function displayNum1(number){
 
 
 btnMultiply.addEventListener("click",function(){
+    SELECTED_OPERATOR = "multiply"
     numberPlacementOnDisplay = "afterOperator"
-    displayOperator = "*"
+    displayTopOperator.textContent = "*"
+})
 
+btnEquals.addEventListener("click",function(){
+    displayBottomResult.textContent = multiply(displayNumBeforeOperator,displayNumAfterOperator)
+    
 })
 
 //Add eventlistenr to nu numbers, event1 will store numbers in displayNymbers1 Variable,
@@ -73,7 +80,6 @@ function plusOperator(){
     storedNumber1 = displayNumBeforeOperator;
     
 }
-displayTopOperator.textContent = "+"
 
 function displayContentAnswer(){
 
