@@ -20,40 +20,41 @@ const btnEquals = document.querySelector(".btn_row5--equals")
 const btnDot = document.querySelector(".btn_row5--dot")
 const numbers = document.querySelectorAll(".numPad")
 const displayTopFirst = document.querySelector(".display_numbers_top--first")
-const displayTopOperator = document.querySelector(".display_numbers_top--operator")
 const displayTopLast = document.querySelector(".display_numbers_top--last")
+const displayOperator = document.querySelector(".display_numbers_top--operator")
 const displayBottomResult = document.querySelector(".display_numbers_bottom--calcResult")
 
 let numberValue1 = []
 let numberValue2 = []
-let displayNumBeforeOperator = "";
-let displayNumAfterOperator = "";
-let displayOperator = "";
-let numberPlacementOnDisplay = "beforeOperator"
+let numberBeforeOperator = "";
+let numberAfterOperator = "";
+let operator = "";
+let numberPlacement = "beforeOperator"
 let SELECTED_OPERATOR = ""
+let RESULT = 0;
 
-btnZero.addEventListener("click",displayNum1(btnZero))
-btnOne.addEventListener("click",displayNum1(btnOne))
-btnTwo.addEventListener("click",displayNum1(btnTwo))
-btnThree.addEventListener("click",displayNum1(btnThree))
-btnFour.addEventListener("click",displayNum1(btnFour))
-btnFive.addEventListener("click",displayNum1(btnFive))
-btnSix.addEventListener("click",displayNum1(btnSix))
-btnSeven.addEventListener("click",displayNum1(btnSeven))
-btnEight.addEventListener("click",displayNum1(btnEight))
-btnNine.addEventListener("click",displayNum1(btnNine))
+btnZero.addEventListener("click",displayNum(btnZero))
+btnOne.addEventListener("click",displayNum(btnOne))
+btnTwo.addEventListener("click",displayNum(btnTwo))
+btnThree.addEventListener("click",displayNum(btnThree))
+btnFour.addEventListener("click",displayNum(btnFour))
+btnFive.addEventListener("click",displayNum(btnFive))
+btnSix.addEventListener("click",displayNum(btnSix))
+btnSeven.addEventListener("click",displayNum(btnSeven))
+btnEight.addEventListener("click",displayNum(btnEight))
+btnNine.addEventListener("click",displayNum(btnNine))
 
-function displayNum1(number){
+function displayNum(number){
     number.addEventListener("click", ()=>{
-        if(numberPlacementOnDisplay === "beforeOperator"){
+        if(numberPlacement === "beforeOperator"){
             numberValue1.push(number.value)
-            displayNumBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
-            displayTopFirst.textContent = displayNumBeforeOperator
+            numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
+            displayTopFirst.textContent = numberBeforeOperator
             console.log(number.value)
-        }else if(numberPlacementOnDisplay === "afterOperator"){
+        }else if(numberPlacement === "afterOperator"){
             numberValue2.push(number.value)
-            displayNumAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
-            displayTopLast.textContent = displayNumAfterOperator
+            numberAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
+            displayTopLast.textContent = numberAfterOperator
             console.log(number.value)
             }
         })
@@ -61,14 +62,23 @@ function displayNum1(number){
     
 
 
-btnMultiply.addEventListener("click",function(){
-    SELECTED_OPERATOR = "multiply"
-    numberPlacementOnDisplay = "afterOperator"
-    displayTopOperator.textContent = "*"
-})
+
 
 btnEquals.addEventListener("click",function(){
-    displayBottomResult.textContent = multiply(displayNumBeforeOperator,displayNumAfterOperator)
+    if(SELECTED_OPERATOR === "div"){
+        RESULT = divide(numberBeforeOperator,numberAfterOperator)
+        displayBottomResult.textContent = RESULT
+    }else if(SELECTED_OPERATOR === "multi"){
+        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
+        displayBottomResult.textContent = RESULT
+    }else if(SELECTED_OPERATOR === "sub"){
+        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
+        displayBottomResult.textContent = RESULT
+    }else if(SELECTED_OPERATOR === "add"){
+        RESULT = add(numberBeforeOperator,numberAfterOperator)
+        displayBottomResult.textContent = RESULT
+    }
+    
     
 })
 
@@ -76,33 +86,38 @@ btnEquals.addEventListener("click",function(){
 //when Operator is clicket aka chosen remove Event1 and add event 2, event 2 stores numvbers in displaynumber2 variable
 //so first numbers entered befre operator stored in dN1, and after operator is clicked no nomre numbers are stored in dN1 but instead in dN2
 
-function plusOperator(){
-    storedNumber1 = displayNumBeforeOperator;
-    
-}
 
-function displayContentAnswer(){
 
-}
 
 
 btnDivison.addEventListener("click",function(){
-
+    SELECTED_OPERATOR = "div"
+    numberPlacement = "afterOperator"
+    displayOperator.textContent = "/"
 })
 
+btnMultiply.addEventListener("click",function(){
+    SELECTED_OPERATOR = "multi"
+    numberPlacement = "afterOperator"
+    displayOperator.textContent = "*"
+})
 
 btnAddition.addEventListener("click",function(){
-
+    SELECTED_OPERATOR = "add"
+    numberPlacement = "afterOperator"
+    displayOperator.textContent = "+"
 })
 
 btnSubtract.addEventListener("click",function(){
-  
+    SELECTED_OPERATOR = "sub"
+    numberPlacement = "afterOperator"
+    displayOperator.textContent = "-"
 })
 
 
 
-function add(){
-    
+function add(num1,num2){
+    return parseInt(num1) + parseInt(num2)
 }
 
 function subtract(num1,num2){
@@ -116,7 +131,7 @@ function multiply(num1,num2){
 }
 
 function operate(operator){
-    return operator
+    
 }
 
 
