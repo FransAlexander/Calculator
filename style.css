@@ -39,8 +39,14 @@ body{
     border: 1px solid black;
 }
     .display_numbers_top--calcNumbers{
+        display: flex;
         font-size: 1rem;
     }
+        /* .DNT{
+            height: 100%;
+            width: 100%;
+            border: solid 1px black;
+        } */
         .display_numbers_bottom--calcResult{
             font-size: 1.5rem;
         }
