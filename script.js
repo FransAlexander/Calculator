@@ -32,6 +32,7 @@ let operator = "";
 let numberPlacement = "beforeOperator"
 let SELECTED_OPERATOR = ""
 let RESULT = 0;
+let STATUS = ""
 
 btnZero.addEventListener("click",displayNum(btnZero))
 btnOne.addEventListener("click",displayNum(btnOne))
@@ -44,82 +45,127 @@ btnSeven.addEventListener("click",displayNum(btnSeven))
 btnEight.addEventListener("click",displayNum(btnEight))
 btnNine.addEventListener("click",displayNum(btnNine))
 
+btnEquals.addEventListener("click",()=>{
+    if(typeof numberBeforeOperator === "number" && typeof numberAfterOperator === "number"){
+        STATUS = "equals"
+        operate()
+    }
+})
+
+btnClear.addEventListener("click", clearAll)
+
+btnBackspace.addEventListener("click",()=>{
+
+})
+btnDot.addEventListener("click",()=>{
+
+})
+
+function multipleOperatorCalc(operator){
+    num1 = RESULT
+}
+
 function displayNum(number){
     number.addEventListener("click", ()=>{
+        STATUS = "Number"
         if(numberPlacement === "beforeOperator"){
-            numberValue1.push(number.value)
-            numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
-            displayTopFirst.textContent = numberBeforeOperator
-            console.log(number.value)
+                numberValue1.push(number.value)
+                numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
+                displayTopFirst.textContent = numberBeforeOperator
         }else if(numberPlacement === "afterOperator"){
-            numberValue2.push(number.value)
-            numberAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
-            displayTopLast.textContent = numberAfterOperator
-            console.log(number.value)
+                numberValue2.push(number.value)
+                numberAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
+                displayTopLast.textContent = numberAfterOperator
             }
         })
     }
-    
-
-
-
-
-btnEquals.addEventListener("click",function(){
-    if(SELECTED_OPERATOR === "div"){
-        RESULT = divide(numberBeforeOperator,numberAfterOperator)
-        displayBottomResult.textContent = RESULT
-    }else if(SELECTED_OPERATOR === "multi"){
-        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
-        displayBottomResult.textContent = RESULT
-    }else if(SELECTED_OPERATOR === "sub"){
-        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
-        displayBottomResult.textContent = RESULT
-    }else if(SELECTED_OPERATOR === "add"){
-        RESULT = add(numberBeforeOperator,numberAfterOperator)
-        displayBottomResult.textContent = RESULT
-    }
-    
-    
-})
-
-//Add eventlistenr to nu numbers, event1 will store numbers in displayNymbers1 Variable,
-//when Operator is clicket aka chosen remove Event1 and add event 2, event 2 stores numvbers in displaynumber2 variable
-//so first numbers entered befre operator stored in dN1, and after operator is clicked no nomre numbers are stored in dN1 but instead in dN2
-
-
-
-
 
 btnDivison.addEventListener("click",function(){
     SELECTED_OPERATOR = "div"
     numberPlacement = "afterOperator"
     displayOperator.textContent = "/"
+    if(STATUS === "equals"){
+        numberBeforeOperator = RESULT
+    }
 })
 
 btnMultiply.addEventListener("click",function(){
     SELECTED_OPERATOR = "multi"
     numberPlacement = "afterOperator"
     displayOperator.textContent = "*"
+    if(STATUS === "equals"){
+        numberBeforeOperator = RESULT
+    }
 })
 
 btnAddition.addEventListener("click",function(){
     SELECTED_OPERATOR = "add"
     numberPlacement = "afterOperator"
     displayOperator.textContent = "+"
+    if(STATUS === "equals"){
+        numberBeforeOperator = RESULT
+    }
 })
 
 btnSubtract.addEventListener("click",function(){
     SELECTED_OPERATOR = "sub"
     numberPlacement = "afterOperator"
     displayOperator.textContent = "-"
+    if(STATUS === "equals"){
+        numberBeforeOperator = RESULT
+    }
 })
 
 
+function clearAll(){
+    displayTopFirst.textContent = "";
+    displayTopLast.textContent = "";
+    displayOperator.textContent = "";
+    numberValue1 = []
+    numberValue2 = []
+    numberBeforeOperator = 0;
+    numberAfterOperator = 0;
+    operator = "";
+    numberPlacement = "beforeOperator"
+    SELECTED_OPERATOR = ""
+    RESULT = 0;
+}
+function clearOperate(){
+    displayTopLast.textContent = "";
+    displayOperator.textContent = "";
+    numberValue1 = []
+    numberValue2 = []
+    numberBeforeOperator = 0;
+    numberAfterOperator = 0;
+    operator = "";
+    numberPlacement = "beforeOperator"
+    SELECTED_OPERATOR = ""
+}
+
+
+function operate(){
+    if(SELECTED_OPERATOR === "div"){
+        RESULT = divide(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        clearOperate()
+    }else if(SELECTED_OPERATOR === "multi"){
+        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        clearOperate()
+    }else if(SELECTED_OPERATOR === "sub"){
+        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        clearOperate()
+    }else if(SELECTED_OPERATOR === "add"){
+        RESULT = add(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        clearOperate()
+    }
+}
 
 function add(num1,num2){
     return parseInt(num1) + parseInt(num2)
 }
-
 function subtract(num1,num2){
     return parseInt(num1) - parseInt(num2)
 }
@@ -130,21 +176,11 @@ function multiply(num1,num2){
     return parseInt(num1) * parseInt(num2)
 }
 
-function operate(operator){
-    
-}
 
-
-
-//When NUMBERS gets cLICKED triggers EVENT to send the value of button clicked
-//to the variable that holds total of number, in an ARRAY that i convert to numbers and return
-//when non numbeerrs (% * + -) gets CLICKED triggers EVENT to and choosen  OPERATOR to
-//the numbers variable, so example 123 *  it would be added after the numbers
-//ONCE operator btn is clicked Number eneterd after will land behind the operator 
-
-
-
-// create class btnNUmbers and add Elistener to all of them to listen for vlaue of btn 
-
-
-//WHEN + btn is CLICKED, store DispalyNumbers in VAR 1 concat + at the end and reset displayNumbers VAR
+// trying out STATUS, basically if i click for example the EQAUALS btn, then status is changed to "equals"
+//depening on STATUS the different btns act differently,
+// if STATUS = equals for example, number btns should clear all variables valeus, so aka start calcs from scratch,
+// but if STATUS = equals and i click the operator btns i take the result from equals and use that 
+// as  the first number in the operation aka numberBeforeOperator, 
+// example : 8/2 = 4 so RESULT = 4.....IF "add"(+) operator is CLICKED then num1 in add(num1,num2) function = RESULT(4)
+// so it looks something like ( 4 + "..." ) after the initial CLICK, then IF num2 is enterd and Equals is CLICKED again it runs 4 + whatever num is enterd as second.
