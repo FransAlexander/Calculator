@@ -31,6 +31,7 @@ let numberAfterOperator = "";
 let operator = "";
 let numberPlacement = "beforeOperator"
 let SELECTED_OPERATOR = ""
+let PREVIOUS_OPERATOR = ""
 let RESULT = 0;
 let STATUS = ""
 
@@ -52,22 +53,28 @@ btnEquals.addEventListener("click",()=>{
     }
 })
 
-btnClear.addEventListener("click", clearAll)
-
-btnBackspace.addEventListener("click",()=>{
-
+btnClear.addEventListener("click", ()=>{
+    displayTopFirst.textContent = "";
+    displayTopLast.textContent = "";
+    displayOperator.textContent = "";
+    numberValue1 = []
+    numberValue2 = []
+    numberBeforeOperator = "";
+    numberAfterOperator = "";
+    operator = "";
+    numberPlacement = "beforeOperator"
+  
+    RESULT = 0;
 })
+
 btnDot.addEventListener("click",()=>{
 
 })
 
-function multipleOperatorCalc(operator){
-    num1 = RESULT
-}
-
+//Number Select
 function displayNum(number){
     number.addEventListener("click", ()=>{
-        STATUS = "Number"
+        STATUS = ""
         if(numberPlacement === "beforeOperator"){
                 numberValue1.push(number.value)
                 numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
@@ -80,69 +87,11 @@ function displayNum(number){
         })
     }
 
-btnDivison.addEventListener("click",function(){
-    SELECTED_OPERATOR = "div"
-    numberPlacement = "afterOperator"
-    displayOperator.textContent = "/"
-    if(STATUS === "equals"){
-        numberBeforeOperator = RESULT
-    }
-})
-
-btnMultiply.addEventListener("click",function(){
-    SELECTED_OPERATOR = "multi"
-    numberPlacement = "afterOperator"
-    displayOperator.textContent = "*"
-    if(STATUS === "equals"){
-        numberBeforeOperator = RESULT
-    }
-})
-
-btnAddition.addEventListener("click",function(){
-    SELECTED_OPERATOR = "add"
-    numberPlacement = "afterOperator"
-    displayOperator.textContent = "+"
-    if(STATUS === "equals"){
-        numberBeforeOperator = RESULT
-    }
-})
-
-btnSubtract.addEventListener("click",function(){
-    SELECTED_OPERATOR = "sub"
-    numberPlacement = "afterOperator"
-    displayOperator.textContent = "-"
-    if(STATUS === "equals"){
-        numberBeforeOperator = RESULT
-    }
-})
 
 
-function clearAll(){
-    displayTopFirst.textContent = "";
-    displayTopLast.textContent = "";
-    displayOperator.textContent = "";
-    numberValue1 = []
-    numberValue2 = []
-    numberBeforeOperator = 0;
-    numberAfterOperator = 0;
-    operator = "";
-    numberPlacement = "beforeOperator"
-    SELECTED_OPERATOR = ""
-    RESULT = 0;
-}
-function clearOperate(){
-    displayTopLast.textContent = "";
-    displayOperator.textContent = "";
-    numberValue1 = []
-    numberValue2 = []
-    numberBeforeOperator = 0;
-    numberAfterOperator = 0;
-    operator = "";
-    numberPlacement = "beforeOperator"
-    SELECTED_OPERATOR = ""
-}
-
-
+/*------------------
+--Operator Selection
+-------------------*/
 function operate(){
     if(SELECTED_OPERATOR === "div"){
         RESULT = divide(numberBeforeOperator,numberAfterOperator)
@@ -163,6 +112,18 @@ function operate(){
     }
 }
 
+function clearOperate(){
+    displayTopLast.textContent = "";
+    displayOperator.textContent = "";
+    numberValue1 = []
+    numberValue2 = []
+    numberBeforeOperator = 0;
+    numberAfterOperator = 0;
+    operator = "";
+    numberPlacement = "beforeOperator"
+    SELECTED_OPERATOR = ""
+}
+
 function add(num1,num2){
     return parseInt(num1) + parseInt(num2)
 }
@@ -175,12 +136,75 @@ function divide(num1,num2){
 function multiply(num1,num2){
     return parseInt(num1) * parseInt(num2)
 }
+//   if(typeof numberBeforeOperator === "number" && typeof numberAfterOperator === "number"){
+ //   operate()
+//}
+btnDivison.addEventListener("click",function(){
+    operatorBtnCalc()
+    operatorBtnSelect("div","/")
+})
+
+btnMultiply.addEventListener("click",function(){
+    operatorBtnCalc()
+    operatorBtnSelect("multi","*")
+})
+
+btnAddition.addEventListener("click",function(){
+    operatorBtnCalc()
+    operatorBtnSelect("add","+")
+})
+
+btnSubtract.addEventListener("click",function(){
+    operatorBtnCalc()
+    operatorBtnSelect("sub","-")
+    
+   
+})
+
+function operatorBtnSelect(op,sign){
+    SELECTED_OPERATOR = op
+
+    numberPlacement = "afterOperator"
+    operator = sign
+    displayOperator.textContent = sign
+     
+    if(STATUS === "equals"){
+        numberBeforeOperator = RESULT
+    }
+}
+
+function operatorBtnCalc(){
+    if(operator === "+"){
+        RESULT = add(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        displayTopLast.textContent = "";
+        numberBeforeOperator = RESULT;
+        numberAfterOperator = 0;
+        numberValue2 = []
+    }else if(operator === "-"){
+        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        displayTopLast.textContent = "";
+        numberBeforeOperator = RESULT;
+        numberAfterOperator = 0;
+        numberValue2 = []
+    }else if(operator === "*"){
+        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        displayTopLast.textContent = "";
+        numberBeforeOperator = RESULT;
+        numberAfterOperator = 0;
+        numberValue2 = []
+    }else if(operator === "/"){
+        RESULT = divide(numberBeforeOperator,numberAfterOperator)
+        displayTopFirst.textContent = RESULT;
+        displayTopLast.textContent = "";
+        numberBeforeOperator = RESULT;
+        numberAfterOperator = 0;
+        numberValue2 = []
+    }
+}
 
 
-// trying out STATUS, basically if i click for example the EQAUALS btn, then status is changed to "equals"
-//depening on STATUS the different btns act differently,
-// if STATUS = equals for example, number btns should clear all variables valeus, so aka start calcs from scratch,
-// but if STATUS = equals and i click the operator btns i take the result from equals and use that 
-// as  the first number in the operation aka numberBeforeOperator, 
-// example : 8/2 = 4 so RESULT = 4.....IF "add"(+) operator is CLICKED then num1 in add(num1,num2) function = RESULT(4)
-// so it looks something like ( 4 + "..." ) after the initial CLICK, then IF num2 is enterd and Equals is CLICKED again it runs 4 + whatever num is enterd as second.
+// WHEN operator IS CLICKED, ADD That OPERATOR to STATUS_OPERATOR,
+ // IF operator IS CLICKED and both num vals are numbers, THEN 
