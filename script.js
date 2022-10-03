@@ -18,7 +18,6 @@ const btnBackspace = document.querySelector(".btn_row1--backspace")
 const btnClear = document.querySelector(".btn_row1--clear")
 const btnEquals = document.querySelector(".btn_row5--equals")
 const btnDot = document.querySelector(".btn_row5--dot")
-const numbers = document.querySelectorAll(".numPad")
 const displayTopFirst = document.querySelector(".display_numbers_top--first")
 const displayTopLast = document.querySelector(".display_numbers_top--last")
 const displayOperator = document.querySelector(".display_numbers_top--operator")
@@ -31,10 +30,13 @@ let numberAfterOperator = "";
 let operator = "";
 let numberPlacement = "beforeOperator"
 let SELECTED_OPERATOR = ""
-let PREVIOUS_OPERATOR = ""
 let RESULT = 0;
 let STATUS = ""
 
+
+/*------------------
+--Number Selection---
+-------------------*/
 btnZero.addEventListener("click",displayNum(btnZero))
 btnOne.addEventListener("click",displayNum(btnOne))
 btnTwo.addEventListener("click",displayNum(btnTwo))
@@ -46,99 +48,24 @@ btnSeven.addEventListener("click",displayNum(btnSeven))
 btnEight.addEventListener("click",displayNum(btnEight))
 btnNine.addEventListener("click",displayNum(btnNine))
 
-btnEquals.addEventListener("click",()=>{
-    if(typeof numberBeforeOperator === "number" && typeof numberAfterOperator === "number"){
-        STATUS = "equals"
-        operate()
-    }
-})
-
-btnClear.addEventListener("click", ()=>{
-    displayTopFirst.textContent = "";
-    displayTopLast.textContent = "";
-    displayOperator.textContent = "";
-    numberValue1 = []
-    numberValue2 = []
-    numberBeforeOperator = "";
-    numberAfterOperator = "";
-    operator = "";
-    numberPlacement = "beforeOperator"
-  
-    RESULT = 0;
-})
-
-btnDot.addEventListener("click",()=>{
-
-})
-
-//Number Select
-function displayNum(number){
-    number.addEventListener("click", ()=>{
-        STATUS = ""
-        if(numberPlacement === "beforeOperator"){
-                numberValue1.push(number.value)
-                numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
-                displayTopFirst.textContent = numberBeforeOperator
-        }else if(numberPlacement === "afterOperator"){
-                numberValue2.push(number.value)
-                numberAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
-                displayTopLast.textContent = numberAfterOperator
-            }
-        })
-    }
-
-
+    function displayNum(number){
+        number.addEventListener("click", ()=>{
+            STATUS = ""
+            if(numberPlacement === "beforeOperator"){
+                    numberValue1.push(number.value)
+                    numberBeforeOperator = parseFloat(numberValue1.toString().replaceAll(",",""))
+                    displayTopFirst.textContent = numberBeforeOperator
+            }else if(numberPlacement === "afterOperator"){
+                    numberValue2.push(number.value)
+                    numberAfterOperator = parseFloat(numberValue2.toString().replaceAll(",",""))
+                    displayTopLast.textContent = numberAfterOperator
+                }
+            })
+        }
 
 /*------------------
 --Operator Selection
 -------------------*/
-function operate(){
-    if(SELECTED_OPERATOR === "div"){
-        RESULT = divide(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        clearOperate()
-    }else if(SELECTED_OPERATOR === "multi"){
-        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        clearOperate()
-    }else if(SELECTED_OPERATOR === "sub"){
-        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        clearOperate()
-    }else if(SELECTED_OPERATOR === "add"){
-        RESULT = add(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        clearOperate()
-    }
-}
-
-function clearOperate(){
-    displayTopLast.textContent = "";
-    displayOperator.textContent = "";
-    numberValue1 = []
-    numberValue2 = []
-    numberBeforeOperator = 0;
-    numberAfterOperator = 0;
-    operator = "";
-    numberPlacement = "beforeOperator"
-    SELECTED_OPERATOR = ""
-}
-
-function add(num1,num2){
-    return parseInt(num1) + parseInt(num2)
-}
-function subtract(num1,num2){
-    return parseInt(num1) - parseInt(num2)
-}
-function divide(num1,num2){
-    return parseInt(num1) / parseInt(num2)
-}
-function multiply(num1,num2){
-    return parseInt(num1) * parseInt(num2)
-}
-//   if(typeof numberBeforeOperator === "number" && typeof numberAfterOperator === "number"){
- //   operate()
-//}
 btnDivison.addEventListener("click",function(){
     operatorBtnCalc()
     operatorBtnSelect("div","/")
@@ -157,54 +84,142 @@ btnAddition.addEventListener("click",function(){
 btnSubtract.addEventListener("click",function(){
     operatorBtnCalc()
     operatorBtnSelect("sub","-")
-    
-   
 })
 
-function operatorBtnSelect(op,sign){
-    SELECTED_OPERATOR = op
-
-    numberPlacement = "afterOperator"
-    operator = sign
-    displayOperator.textContent = sign
-     
-    if(STATUS === "equals"){
-        numberBeforeOperator = RESULT
+    function operatorBtnSelect(op,sign){
+        //allows the use of result of a calc for further calcs
+        if(STATUS === "equals"){
+            numberBeforeOperator = RESULT
+        }
+        //prevent from clicking operator before first number is inputed
+        if(typeof numberBeforeOperator === "number"){
+            SELECTED_OPERATOR = op
+            numberPlacement = "afterOperator"
+            operator = sign
+            displayOperator.textContent = sign
+            }
+         }
+            //calculates previous numbers if operator btn is clicked instaed of equals btn
+            // allows you to input a series of operators in a calculation i.e 1+2/3*5
+            function operatorBtnCalc(){
+                if(operator === "+"){
+                    RESULT = add(numberBeforeOperator,numberAfterOperator)
+                    displayTopFirst.textContent = RESULT;
+                    displayTopLast.textContent = "";
+                    numberBeforeOperator = RESULT;
+                    numberAfterOperator = 0;
+                    numberValue2 = []
+                }else if(operator === "-"){
+                    RESULT = subtract(numberBeforeOperator,numberAfterOperator)
+                    displayTopFirst.textContent = RESULT;
+                    displayTopLast.textContent = "";
+                    numberBeforeOperator = RESULT;
+                    numberAfterOperator = 0;
+                    numberValue2 = []
+                }else if(operator === "*"){
+                    RESULT = multiply(numberBeforeOperator,numberAfterOperator)
+                    displayTopFirst.textContent = RESULT;
+                    displayTopLast.textContent = "";
+                    numberBeforeOperator = RESULT;
+                    numberAfterOperator = 0;
+                    numberValue2 = []
+                }else if(operator === "/"){
+                    RESULT = divide(numberBeforeOperator,numberAfterOperator)
+                    displayTopFirst.textContent = RESULT;
+                    displayTopLast.textContent = "";
+                    numberBeforeOperator = RESULT;
+                    numberAfterOperator = 0;
+                    numberValue2 = []
+                    }
+                }
+                
+btnEquals.addEventListener("click",()=>{
+    if(typeof numberBeforeOperator === "number" && typeof numberAfterOperator === "number"){
+        STATUS = "equals"
+        operate()
     }
-}
+})
 
-function operatorBtnCalc(){
-    if(operator === "+"){
-        RESULT = add(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        displayTopLast.textContent = "";
-        numberBeforeOperator = RESULT;
-        numberAfterOperator = 0;
-        numberValue2 = []
-    }else if(operator === "-"){
-        RESULT = subtract(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        displayTopLast.textContent = "";
-        numberBeforeOperator = RESULT;
-        numberAfterOperator = 0;
-        numberValue2 = []
-    }else if(operator === "*"){
-        RESULT = multiply(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        displayTopLast.textContent = "";
-        numberBeforeOperator = RESULT;
-        numberAfterOperator = 0;
-        numberValue2 = []
-    }else if(operator === "/"){
-        RESULT = divide(numberBeforeOperator,numberAfterOperator)
-        displayTopFirst.textContent = RESULT;
-        displayTopLast.textContent = "";
-        numberBeforeOperator = RESULT;
-        numberAfterOperator = 0;
-        numberValue2 = []
+    function operate(){
+        if(SELECTED_OPERATOR === "div"){
+            RESULT = divide(numberBeforeOperator,numberAfterOperator)
+            displayTopFirst.textContent = RESULT;
+            clearOperate()
+        }else if(SELECTED_OPERATOR === "multi"){
+            RESULT = multiply(numberBeforeOperator,numberAfterOperator)
+            displayTopFirst.textContent = RESULT;
+            clearOperate()
+        }else if(SELECTED_OPERATOR === "sub"){
+            RESULT = subtract(numberBeforeOperator,numberAfterOperator)
+            displayTopFirst.textContent = RESULT;
+            clearOperate()
+        }else if(SELECTED_OPERATOR === "add"){
+            RESULT = add(numberBeforeOperator,numberAfterOperator)
+            displayTopFirst.textContent = RESULT;
+            clearOperate()
+            }
+        }
+
+            function add(num1,num2){
+                return parseFloat(num1) + parseFloat(num2)
+            }
+            function subtract(num1,num2){
+                return parseFloat(num1) - parseFloat(num2)
+            }
+            function divide(num1,num2){
+                return parseFloat(num1) / parseFloat(num2)
+            }
+            function multiply(num1,num2){
+                return parseFloat(num1) * parseFloat(num2)
+            }
+
+                function clearOperate(){
+                    displayTopLast.textContent = "";
+                    displayOperator.textContent = "";
+                    numberValue1 = []
+                    numberValue2 = []
+                    numberBeforeOperator = 0;
+                    numberAfterOperator = 0;
+                    operator = "";
+                    numberPlacement = "beforeOperator"
+                    SELECTED_OPERATOR = ""
+                }
+
+/*------------------
+-----misc buttons----
+-------------------*/
+
+btnDot.addEventListener("click",displayNum(btnDot))
+
+btnClear.addEventListener("click", ()=>{
+    displayTopFirst.textContent = "";
+    displayTopLast.textContent = "";
+    displayOperator.textContent = "";
+    numberValue1 = []
+    numberValue2 = []
+    numberBeforeOperator = "";
+    numberAfterOperator = "";
+    operator = "";
+    numberPlacement = "beforeOperator"
+    RESULT = 0;
+})
+
+btnBackspace.addEventListener("click",()=>{
+    if(numberPlacement === "beforeOperator"){
+        numberValue1.pop()
+        numberBeforeOperator = parseInt(numberValue1.toString().replaceAll(",",""))
+        displayTopFirst.textContent = numberBeforeOperator
+        if(numberValue1.length == 0){
+            displayTopFirst.textContent = ""
+        }
+    }else if((numberPlacement === "afterOperator")){
+        numberValue2.pop()
+        numberAfterOperator = parseInt(numberValue2.toString().replaceAll(",",""))
+        displayTopLast.textContent = numberAfterOperator
+        if(numberValue2.length == 0){
+            displayTopLast.textContent = ""
+        }
     }
-}
+})
 
 
-// WHEN operator IS CLICKED, ADD That OPERATOR to STATUS_OPERATOR,
- // IF operator IS CLICKED and both num vals are numbers, THEN 
