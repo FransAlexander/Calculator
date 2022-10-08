@@ -179,18 +179,12 @@ body{
                 width: 25%;             
             }
 
-            /* @media only screen and (min-device-width: 375px) and (max-device-width: 812px){ 
-                .calc_container{
-                    position: absolute;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100%;
-                    width: 100%; 
-                }
-          } */
-          
+@media screen and (min-width: 600px) {
+    .calc_container{
+        height: 80%;
+        width: 30%; 
+    }
+  }
            
           
 
