@@ -25,7 +25,7 @@ body{
     justify-content: center;
     align-items: center;
     height: 90%;
-    width: 25%; 
+    width: 100%; 
 }
 
 .calc_display{
@@ -179,7 +179,7 @@ body{
                 width: 25%;             
             }
 
-            @media only screen and (min-device-width: 375px) and (max-device-width: 812px){ 
+            /* @media only screen and (min-device-width: 375px) and (max-device-width: 812px){ 
                 .calc_container{
                     position: absolute;
                     display: flex;
@@ -189,7 +189,7 @@ body{
                     height: 100%;
                     width: 100%; 
                 }
-          }
+          } */
           
            
           
