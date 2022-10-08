@@ -24,7 +24,7 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 844px;
+    height: 100%;
     width: 100%; /* for moblie use 100% and for desktop use px sizing */
 }
 
@@ -180,9 +180,9 @@ body{
             }
 
 @media screen and (min-width: 800px) {
-    .calc_container {
+    /* .calc_container {
         width: 390px;
         height: 700px;
         box-shadow: 11px 11px 15px rgba(80, 80, 80, 0.699);
-    }
+    } */
   }      
